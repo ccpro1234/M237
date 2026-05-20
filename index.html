@@ -340,7 +340,7 @@ max-width:100%;
 </div>
 
 <div class="card">
-<h2>กลยุทธ์ & DNA (18 สาย)</h2>
+<h2>กลยุทธ์ & DNA (17 สาย)</h2>
 <div id="strategy-list"></div>
 </div>
 
@@ -602,50 +602,6 @@ strategies.push({
  }
 });
 
-/* ===== NEW 15: Weighted Recency Pressure (ถ่วงน้ำหนักย้อนหลัง) ===== */
-strategies.push({
-  name:"Weighted Recency Pressure (ถ่วงน้ำหนัก)",
- logic:h=>{
-
-   let f=h.filter(x=>x==='P'||x==='B');
-
-   if(f.length===0) return 'P';
-   if(f.length===1) return f[0];
-
-   let w=f.slice(-7);
-
-   let weights=[1,2,3,5,8,13,21];
-
-   weights=weights.slice(7-w.length);
-
-   let score=0;
-
-   w.forEach((v,i)=>{
-      score += (v==='P'?1:-1) * weights[i];
-   });
-
-   if(score>=10) return 'B';
-   if(score<=-10) return 'P';
-
-   let odd =0, even=0;
-
-   w.forEach((v,i)=>{
-      if(i%2===0){
-         if(v==='P') odd++;
-         else odd--;
-      }else{
-         if(v==='P') even++;
-         else even--;
-      }
-   });
-
-   if((odd-even)>0) return 'B';
-   if((odd-even)<0) return 'P';
-
-   let last=f[f.length-1];
-   return last==='P'?'B':'P';
- }
-});
 
 
 /* ===== NEW 16: Adaptive Phase Engine ===== */
