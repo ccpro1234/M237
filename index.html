@@ -340,7 +340,7 @@ max-width:100%;
 </div>
 
 <div class="card">
-<h2>กลยุทธ์ & DNA (16 สาย)</h2>
+<h2>กลยุทธ์ & DNA (17 สาย)</h2>
 <div id="strategy-list"></div>
 </div>
 
@@ -703,6 +703,60 @@ strategies.push({
     // เดี่ยว
     if(streak===1){
       return last==='P' ? 'B' : 'P';
+    }
+
+    return last;
+  }
+});
+
+
+/* ===== NEW 17: Entropy Pulse Tracker ===== */
+strategies.push({
+  name: "Entropy Pulse Tracker (อ่านจังหวะสลับ)",
+  logic: h => {
+    let f = h.filter(x => x === 'P' || x === 'B');
+
+    // ยังไม่มีข้อมูล
+    if (f.length === 0) return 'P';
+
+    // มี 1 ตา -> ตามก่อน
+    if (f.length === 1) return f[0];
+
+    // ใช้ย้อนหลัง 8 ตา
+    let recent = f.slice(-8);
+    let last = recent[recent.length - 1];
+
+    // นับจำนวนครั้งที่มีการสลับสี
+    let switches = 0;
+    for (let i = 1; i < recent.length; i++) {
+      if (recent[i] !== recent[i - 1]) switches++;
+    }
+
+    // หาความยาว streak ล่าสุด
+    let streak = 1;
+    for (let i = recent.length - 2; i >= 0; i--) {
+      if (recent[i] === last) streak++;
+      else break;
+    }
+
+    // 1) สลับแรงมาก -> ตาม
+    if (switches >= 5) {
+      return last;
+    }
+
+    // 2) streak ยาว -> สวน
+    if (streak >= 3) {
+      return last === 'P' ? 'B' : 'P';
+    }
+
+    // 3) โต๊ะนิ่ง -> ตาม
+    if (switches <= 2) {
+      return last;
+    }
+
+    // 4) โซนกลาง -> ใช้ parity
+    if (switches % 2 === 0) {
+      return last === 'P' ? 'B' : 'P';
     }
 
     return last;
