@@ -271,7 +271,7 @@ max-width:100%;
 
 <div id="expiredBox" class="expired hidden">
 <h1>โปรแกรมหมดอายุ</h1>
-<p>วันหมดอายุ: 5 มิถุนายน พ.ศ. 2569</p>
+<p>วันหมดอายุ: 17 มิถุนายน พ.ศ. 2569</p>
 <small>กรุณาติดต่อผู้พัฒนา</small>
 </div>
 
@@ -301,7 +301,7 @@ max-width:100%;
 
 <h1>Genius formula Version Excluesive+Quick View
 </h1>
-<div class="exp-date">หมดอายุวันที่ 5 มิถุนายน พ.ศ. 2569</div>
+<div class="exp-date">หมดอายุวันที่ 17 มิถุนายน พ.ศ. 2569</div>
 
 <div class="card counter">
 <span style="color:#3b82f6">P: <b id="cntP">0</b></span>
@@ -340,7 +340,7 @@ max-width:100%;
 </div>
 
 <div class="card">
-<h2>กลยุทธ์ & DNA (17 สาย)</h2>
+<h2>กลยุทธ์ & DNA (18 สาย)</h2>
 <div id="strategy-list"></div>
 </div>
 
@@ -357,7 +357,7 @@ max-width:100%;
 
 
 /* ===== EXPIRATION ===== */
-const EXP_DATE=new Date('2026-06-05T00:00:00');
+const EXP_DATE=new Date('2026-06-17T00:00:00');
 const now=new Date();
 
 const expiredBox=document.getElementById('expiredBox');
@@ -719,6 +719,34 @@ strategies.push({
   }
 });
 
+strategies.push({
+  name:"Run Length Oscillator (อ่านความยาวมังกร)",
+  logic:h=>{
+
+    let f = h.filter(x=>x==='P'||x==='B');
+
+    if(f.length===0) return 'P';
+
+    let last = f[f.length-1];
+
+    let run = 1;
+
+    for(let i=f.length-2;i>=0;i--){
+      if(f[i]===last){
+        run++;
+      }else{
+        break;
+      }
+    }
+
+    if(run===1) return last;
+    if(run===2) return last==='P'?'B':'P';
+    if(run===3) return last;
+    if(run>=4) return last==='P'?'B':'P';
+
+    return last;
+  }
+});
 
 /* ===== FUNCTIONS ===== */
 function addResult(v){results.push(v);updateUI();}
